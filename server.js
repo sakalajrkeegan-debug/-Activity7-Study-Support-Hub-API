@@ -6,6 +6,7 @@ const pool = require("./db");
 const recordsRouter = require("./routes/records");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 
 // Middleware
@@ -26,7 +27,18 @@ app.get("/", (req, res) => {
             records: `${baseURL}/api/records`
         },
         routes: [
-            { method: "GET", path: "/api/records", description: "Get all records" },
+            {
+    method: "GET",
+    path: "/",
+    description: "Display API guide"
+},
+{
+    method: "GET",
+    path: "/health",
+    description: "Check API and database health"
+},
+            
+         { method: "GET", path: "/api/records", description: "Get all records" },
             { method: "GET", path: "/api/records/:id", description: "Get one record" },
             { method: "POST", path: "/api/records", description: "Create a record" },
             { method: "PUT", path: "/api/records/:id", description: "Update a record" },
