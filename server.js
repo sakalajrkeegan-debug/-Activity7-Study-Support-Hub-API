@@ -8,11 +8,28 @@ const recordsRouter = require("./routes/records");
 const app = express();
 app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
+// Approved frontend origins
+const allowedOrigins = (process.env.CLIENT_ORIGINS || "")
+    .split(",")
+    .map(origin => origin.trim())
+    .filter(Boolean);
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(null, false);
+        }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"]
+};
 
 // Middleware
-app.use(cors());
+// Middleware
+app.use(cors(corsOptions));
 app.use(express.json());
-
 // API Guide
 app.get("/", (req, res) => {
     const baseURL = `${req.protocol}://${req.get("host")}`;
